@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import pygame_menu
 # from algorithms import bubble_sort, insertion_sort
 pygame.init()
 
@@ -42,6 +43,63 @@ def insertion_sort(draw_info, ascending=True):
 			yield True
 
 	return lst
+
+
+def selection_sort(draw_info, ascending=True):
+    lst = draw_info.lst
+
+    for i in range(len(lst)):
+        min_idx = i
+
+        # Find the minimum element in the remaining unsorted part of the array
+        for j in range(i+1, len(lst)):
+            if (lst[j] < lst[min_idx] and ascending) or (lst[j] > lst[min_idx] and not ascending):
+                min_idx = j
+
+        # Swap the found minimum element with the first element
+        lst[i], lst[min_idx] = lst[min_idx], lst[i]
+        draw_list(draw_info, {i - 1: draw_info.GREEN, i: draw_info.RED}, True)
+        yield True
+
+    return lst
+
+
+def quick_sort(draw_info, ascending=True):
+    lst = draw_info.lst
+
+    if len(lst) <= 1:
+        return lst
+    
+    stack = [(0, len(lst)-1)]  # Initialize stack with initial left and right indices
+    
+    while stack:
+        low, high = stack.pop()
+        
+        if low < high:
+            pivot_idx = partition(draw_info, lst, low, high)
+            
+            # Push indices of the two subarrays onto the stack
+            stack.append((low, pivot_idx - 1))
+            stack.append((pivot_idx + 1, high))
+            
+            yield True
+    
+    return lst
+
+
+def partition(draw_info, arr, low, high):
+    pivot = arr[high]  # Choose the last element as the pivot
+    i = low - 1
+    
+    for j in range(low, high):
+        if arr[j] < pivot:
+            i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+    
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    draw_list(draw_info, {i - 1: draw_info.GREEN, i: draw_info.RED}, True)
+
+    return i + 1
 
 
 # -------------------------------- algoritims definitions end --------------------------------
@@ -188,6 +246,25 @@ def main():
             elif event.key == pygame.K_b and not sorting:
                 sorting_algorithm = bubble_sort
                 sorting_algo_name = "bubble sort"
+            elif event.key == pygame.K_s and not sorting:
+                sorting_algorithm = selection_sort
+                sorting_algo_name = "selection sort"
+            elif event.key == pygame.K_q and not sorting:
+                sorting_algorithm = quick_sort
+                sorting_algo_name = "quick sort"
+
+
+    # Create a drop-down menu
+    menu = pygame_menu.Menu("Sorting Algorithm Menu", draw_info.width, draw_info.height, theme=pygame_menu.themes.THEME_DEFAULT)
+
+    menu.add.selector("Sort Algorithm: ", [('Insertion Sort', insertion_sort),
+                                           ('Bubble Sort', bubble_sort),
+                                           ('Selection Sort', selection_sort),
+                                           ('Quick Sort', quick_sort)],
+                      onchange=lambda selection, value: print(value))
+
+    menu.add.button("Start Sorting", None)  # Replace None with a function to start sorting
+
             
 
     pygame.quit()
