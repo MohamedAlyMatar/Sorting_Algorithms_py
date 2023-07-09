@@ -1,7 +1,6 @@
 import pygame
 import random
 import math
-import pygame_menu
 # from algorithms import bubble_sort, insertion_sort
 pygame.init()
 
@@ -150,11 +149,14 @@ class DrawInformation:
 
 def draw(draw_info, algo_name, ascending):
     draw_info.window.fill(draw_info.BACKGROUND_COLOR)
+
+    title = draw_info.LARGE_FONT.render(f"{algo_name} - {'Ascending' if ascending else 'Descending'}", 1, draw_info.GREEN)
+    draw_info.window.blit(title, (draw_info.width/2 - title.get_width()/2 , 5))
     
     controls = draw_info.FONT.render("R - Reset | SPACE - Start Sorting | A - Ascending | D - Descending", 1, draw_info.BLACK)
     draw_info.window.blit(controls, (draw_info.width/2 - controls.get_width()/2 , 45))
 
-    sorting = draw_info.FONT.render("I - Insertion Sort | B - Bubble Sort", 1, draw_info.BLACK)
+    sorting = draw_info.FONT.render("I - Insertion Sort | B - Bubble Sort | Q - Quick Sort | S - Selection Sort ", 1, draw_info.BLACK)
     draw_info.window.blit(sorting, (draw_info.width/2 - sorting.get_width()/2 , 75))
     
     draw_list(draw_info)
@@ -212,7 +214,9 @@ def main():
     sorting_algorithm_generator = None
 
     while run:
-        clock.tick(60)
+        clock.tick(5)
+        # clock.tick(60)
+        # clock.tick(120)
         
         if sorting:
             try:
@@ -252,19 +256,6 @@ def main():
             elif event.key == pygame.K_q and not sorting:
                 sorting_algorithm = quick_sort
                 sorting_algo_name = "quick sort"
-
-
-    # Create a drop-down menu
-    menu = pygame_menu.Menu("Sorting Algorithm Menu", draw_info.width, draw_info.height, theme=pygame_menu.themes.THEME_DEFAULT)
-
-    menu.add.selector("Sort Algorithm: ", [('Insertion Sort', insertion_sort),
-                                           ('Bubble Sort', bubble_sort),
-                                           ('Selection Sort', selection_sort),
-                                           ('Quick Sort', quick_sort)],
-                      onchange=lambda selection, value: print(value))
-
-    menu.add.button("Start Sorting", None)  # Replace None with a function to start sorting
-
             
 
     pygame.quit()
