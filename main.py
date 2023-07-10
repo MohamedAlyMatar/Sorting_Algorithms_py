@@ -150,7 +150,7 @@ class DrawInformation:
 def draw(draw_info, algo_name, ascending):
     draw_info.window.fill(draw_info.BACKGROUND_COLOR)
 
-    title = draw_info.LARGE_FONT.render(f"{algo_name} - {'Ascending' if ascending else 'Descending'}", 1, draw_info.GREEN)
+    title = draw_info.LARGE_FONT.render(f"{algo_name} - {'Ascending' if ascending else 'Descending'}", 1, draw_info.RED)
     draw_info.window.blit(title, (draw_info.width/2 - title.get_width()/2 , 5))
     
     controls = draw_info.FONT.render("R - Reset | SPACE - Start Sorting | A - Ascending | D - Descending", 1, draw_info.BLACK)
@@ -214,8 +214,8 @@ def main():
     sorting_algorithm_generator = None
 
     while run:
-        clock.tick(5)
-        # clock.tick(60)
+        # clock.tick(10)
+        clock.tick(60)
         # clock.tick(120)
         
         if sorting:
